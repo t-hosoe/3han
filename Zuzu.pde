@@ -1,6 +1,6 @@
 import processing.serial.*;
 
-Serial Zumo1,Zumo2;
+Serial Zumo1,Zumo2,Zumo3;
 int data=0;
 int data1 = 0;
 int data2 = 0;
