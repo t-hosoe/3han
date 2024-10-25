@@ -1,8 +1,11 @@
 import processing.serial.*;
 
-Serial Zumo1;
-int data = 0;
-String mode = "Waiting";  // モードの文字列を初期化
+Serial Zumo1,Zumo2;
+int data=0;
+int data1 = 0;
+int data2 = 0;
+String mode1 = "Waiting";  // モードの文字列を初期化
+String mode2 = "Waiting";  // モードの文字列を初期化
 
 void setup() {
   // 利用可能なポート一覧を取得して確認する
@@ -10,6 +13,7 @@ void setup() {
 
   // シリアルポートの初期化
   Zumo1 = new Serial(this, "/dev/ttyUSB0", 9600);
+  Zumo2 = new Serial(this, "/dev/ttyUSB1", 9600);
   
   size(1200, 800);
   background(255);
@@ -41,6 +45,11 @@ void draw() {
   fill(0);
   text(mode, 450, 30);  // 最新のモードを表示
 
+   // Zumo2のモードを表示
+  fill(255);
+  rect(440, 400, 150, 40);  // Zumo2のモード表示エリアを白で上書き
+  fill(0);
+  text(mode2, 450, 430);  // Zumo2の最新モードを表示
   // シリアルデータがあるかをチェックし、読み取る
 }
 
@@ -49,8 +58,16 @@ void serialEvent(Serial p)
    if (p.available() >= 2) {
     if(p.read()=='H')
     {
-      data = p.read();
-      updateMode(data);  // モードの更新
+      if(p==Zumo1)
+      {
+        data1=p.read();
+        mode1=updateMode(data1);
+      }
+      else if(p==Zumo2)
+      {
+        data2 = p.read();
+        mode2 = updateMode(data1);
+      }
       p.clear();
     }
    
