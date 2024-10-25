@@ -1,6 +1,7 @@
 import processing.serial.*;
 Serial Zumo1;
 int data=0;
+String modeText = "Waiting";  // モードの文字列を初期化
 
 void setup() {
  Zumo1= new Serial(this,"/dev/ttyUSB0",9600);
@@ -30,22 +31,8 @@ void draw() {
   fill(255);
   rect(440, 0, 150, 40);  // モード表示エリアを白で上書き
   fill(0);
-
-   if(data==0)
-   {
-   }
-   else if(data ==1)
-   {
-     text("Straight", 450, 30 );
-   }
-    else if(data ==2)
-   {
-     text("Roll", 450, 30 );
-   }
-    else if(data ==3)
-   {
-     text("Stop", 450, 30 );
-   }
+　 text(modeText, 450, 30);
+ 
   
    
    
@@ -65,6 +52,18 @@ void serialEvent(Serial Zumo1)
   if(Zumo1.available()>=1)
   {
     data = Zumo1.read();
+     switch (data) {
+      case 1:
+        modeText = "Straight";
+        break;
+      case 2:
+        modeText = "Roll";
+        break;
+      case 3:
+        modeText = "Stop";
+        break;
+      default:
+        modeText = "Unknown";
   }
   
 }
