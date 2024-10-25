@@ -42,16 +42,21 @@ void draw() {
   text(mode, 450, 30);  // 最新のモードを表示
 
   // シリアルデータがあるかをチェックし、読み取る
-  if (Zumo1.available() >= 2) {
-    if(Zumo1.read()=='H')
+}
+
+void serialEvent(Serial p)
+{
+   if (p.available() >= 2) {
+    if(p.read()=='H')
     {
-      data = Zumo1.read();
+      data = p.read();
       updateMode(data);  // モードの更新
-      Zumo1.clear();
+      p.clear();
     }
    
   }
 }
+  
 
 // キーが押されたときの動作
 void keyPressed() {
