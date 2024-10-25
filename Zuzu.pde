@@ -1,6 +1,6 @@
 import processing.serial.*;
 Serial Zumo1;
-int data;
+int data=0;
 
 void setup() {
  Zumo1= new Serial(this,"/dev/ttyUSB0",9600);
@@ -27,21 +27,24 @@ void setup() {
 }
 
 void draw() {
-   
+  fill(255);
+  rect(440, 0, 150, 40);  // モード表示エリアを白で上書き
+  fill(0);
+
    if(data==0)
    {
    }
    else if(data ==1)
    {
-     text("Straight", 680, 30 );
+     text("Straight", 450, 30 );
    }
     else if(data ==2)
    {
-     text("roll", 680, 30 );
+     text("Roll", 450, 30 );
    }
     else if(data ==3)
    {
-     text("roll", 680, 30 );
+     text("Stop", 450, 30 );
    }
   
    
