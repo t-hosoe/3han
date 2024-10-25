@@ -28,8 +28,8 @@ void setup() {
   text("Zumo1", 30, 30);
   text("Zumo2", 30, 430);
   text("Zumo3", 630, 30);
-  text("mode:", 400, 30);
-  text("mode:", 400, 430);
+  text("mode:", 350, 30);
+  text("mode:", 350, 430);
   text("mode:", 1000, 30);
   text("TIME       :", 630, 500);
   text("GET CUP:", 630, 600);
@@ -42,9 +42,14 @@ void draw() {
   text(mode, 450, 30);  // 最新のモードを表示
 
   // シリアルデータがあるかをチェックし、読み取る
-  if (Zumo1.available() > 0) {
-    data = Zumo1.read();
-    updateMode(data);  // モードの更新
+  if (Zumo1.available() >= 2) {
+    if(Zumo1.read()=='H')
+    {
+      data = Zumo1.read();
+      updateMode(data);  // モードの更新
+      Zumo1.clear();
+    }
+   
   }
 }
 
