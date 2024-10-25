@@ -19,36 +19,39 @@ void movement()
   int dist;
   dist = distance(); 
   static unsigned long startTime; // static変数，時間計測ははunsigned long
-
   Serial.println(dist); //距離をシリアルモニタに出力
+  Serial.println(mode_G);//モードをシリアルモニタに出力
   // この変数は1秒停止の開始時間を覚えておくために使用
   switch (mode_G) 
   {
     case 0:
-      startTime = timeNow_G;
-      mode_G = 1;
+      startTime = timeNow_G;//start時間を保存
+      mode_G = 1;//モードを1に変更する
       break;  // break文を忘れない（忘れるとその下も実行される）
 
     case 1:
-      motors.setSpeeds(100, 100);
-      if(maintainState(2000))
+      motors.setSpeeds(100, 100);//100の速度でロボットを動かす
+      if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
         mode_G = 2;
       break;
       
    case 2:
-      motors.setSpeeds(150, -150);
-      if(0 < dist && dist < 15){
+      motors.setSpeeds(150, -150);//150の速度で回転する
+      if(0 < dist && dist < 15){//物体との距離が15cm以内になったらモードを3にする
         mode_G = 3; 
       }
       if(maintainState(2000))
-        mode_G = 0;
+        mode_G = 1;//nマイクロ秒経ったらモードを2にする
     break;
    case 3:
-    if(dist >= 5){//アームの中に入れるまで前進
-      motors.setSpeeds( 100, 100);   
-    }  else if(0 < dist && dist < 5){
+    if(dist >= 5){//物体との距離が5cm以内になるまで前進
+      motors.setSpeeds(100,100);   
+    }  else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
       motors.setSpeeds(0, 0);         
       delay(1000);
+      if(dist > 5){//物体との距離が5cm以上になるとモードを1にする
+        mode_G = 1;
+      }
     }
     break;
   }
