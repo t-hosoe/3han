@@ -11,16 +11,36 @@ int distance() {
 
   delay(60);                     //trigがHIGHになる間隔を60ms以上空ける（超音波センサの仕様）
 
+  if(dist >=150)
+    dist = 150;
+
   return dist;
 }
-
+float sum_e = 0;
+float turnTo(float theta_r) {
+  float u;
+  float KP = 4.0;
+  float TIinv = 2/1000.0;
+  heading_G = atan2(my,mx) * 180 / M_PI;
+  if (heading_G<0) heading_G += 360;
+  float e = theta_r-heading_G;
+  if (e<-180) e+=360;
+  if (e>180)  e-=360;
+  if (abs(e) > 45.0 ) { // |e|>45のときはP制御
+    u = KP*e;           // P制御
+  } else {              // |e|<=45 の時はPI制御
+    sum_e += TIinv*e*(timeNow_G-timePrev_G);
+    u = KP*(e+sum_e);   // PI 制御
+  }
+  if ( u> 180 ) u = 180;  // 飽和
+  if ( u<-180 ) u = -180; // 飽和
+  return u;
+}
 void movement()
 {
-  int dist;
+  float diff;
   dist = distance(); 
   static unsigned long startTime; // static変数，時間計測ははunsigned long
-  Serial.println(dist); //距離をシリアルモニタに出力
-  Serial.println(mode_G);//モードをシリアルモニタに出力
   // この変数は1秒停止の開始時間を覚えておくために使用
   switch (mode_G) 
   {
@@ -47,14 +67,45 @@ void movement()
     if(dist >= 5){//物体との距離が5cm以内になるまで前進
       motors.setSpeeds(100,100);   
     }  else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
-      motors.setSpeeds(0, 0);         
+      motors.setSpeeds(0, 0);
+      mode_G =4;         
       delay(1000);
       if(dist > 5){//物体との距離が5cm以上になるとモードを1にする
         mode_G = 1;
       }
     }
     break;
+    case 4:
+      
+      diff = turnTo(0);
+      motorL_G = diff;
+      motorR_G = -diff;
+      motors.setSpeeds(motorL_G, motorR_G);
+      if(abs(0-heading_G)<= 5){
+        mode_G = 0;
+      }
   }
+  timePrev_G=timeNow_G;
+}
+
+void info_write(){
+  Serial.print("timeNow:");
+  Serial.print(timeNow_G);
+  Serial.print(",");
+  Serial.print("mode:");
+  Serial.print(mode_G);//モードをシリアルモニタに出力
+  Serial.print(",");
+  Serial.print("dist:");
+  Serial.print(dist); //距離(cm)をシリアルモニタに出力
+  Serial.print(",");
+  Serial.print("red:");
+  Serial.print(red_G);//RGBのred(0~255)の値をシリアルモニタに出力
+  Serial.print(",");
+  Serial.print("green:");
+  Serial.print(green_G);//RGBのgreen(0~255)の値をシリアルモニタに出力
+  Serial.print(",");
+  Serial.print("blue:");
+  Serial.println(blue_G);//RGBのblue(0~255)の値をシリアルモニタに出力
 }
 
 int maintainState( unsigned long period )
