@@ -12,6 +12,7 @@ bool isRed_G, isBlue_G;
 int mode_G; // タスクのモードを表す状態変数
 unsigned long timeInit_G, timeNow_G; //  スタート時間，経過時間
 int motorR_G, motorL_G; // 左右のZumoのモータに与える回転力
+int dist;
 
 void setup()
 {
@@ -40,6 +41,8 @@ void loop()
   sendData(); // データ送信
 
   movement();
+
+  info_write();
   
   /*if( button.isPressed() ){ // Zumo ボタンが押されたら
   mode_G = 0;
@@ -62,7 +65,7 @@ void sendData()
   if (flag_start == true || 
       timeNow_G - timePrev > 500 || 
       (Serial.available() > 0 && timeNow_G - timePrev > 50)) 
-  { 
+ {
     flag_start = false;
     while(Serial.available() > 0)
     { 
@@ -72,9 +75,11 @@ void sendData()
     
     Serial.write('H');
     Serial.write(mode_G);
-    Serial.write((int)red_G);
-    Serial.write((int)green_G );
-    Serial.write((int)blue_G);
+    Serial.write(dist);
+    
+    //Serial.write((int)red_G);
+    //Serial.write((int)green_G );
+    //Serial.write((int)blue_G);
 
     timePrev = timeNow_G;
   }
