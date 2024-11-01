@@ -73,3 +73,19 @@ int maintainState( unsigned long period )
   else
   return 0;
 }
+
+int identifyColor(int red, int green, int blue) {
+  if (red > red && green > green && blue > blues) {
+    return 0;//白
+  } else if (red < reds && green < greens && blue < blues) {
+    return 1; //黒
+  } else if (red < reds && green < greens && blue > blues) {
+    return 2; //青
+  } else if (red > reds && green < greens && blue < blues) {
+    return 3; //赤
+  } else  {
+    return 4"白";
+  } else {
+    return "不明";
+  }
+}
