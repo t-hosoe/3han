@@ -97,7 +97,7 @@ void serialEvent(Serial p)
       {
         data3 = p.read();
         mode3 = updateMode(data3);
-        Dist2=p.read();
+        Dist3=p.read();
       }
       p.clear();
     }
