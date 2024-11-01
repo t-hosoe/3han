@@ -8,6 +8,9 @@ int data3 = 0;
 String mode1 = "Waiting";  // モードの文字列を初期化
 String mode2 = "Waiting";  // モードの文字列を初期化
 String mode3 = "Waiting";  // モードの文字列を初期化
+int Dist1 = 0;
+int Dist2 = 0;
+int Dist3 = 0;
 
 void setup() {
  
@@ -57,28 +60,44 @@ void draw() {
   rect(1030, 0, 150, 40);  // Zumo2のモード表示エリアを白で上書き
   fill(0);
   text(mode3, 1040, 30);  // Zumo2の最新モードを表示
+  
+  fill(255);
+  rect(440, 200, 150, 40);  // Zumo2のモード表示エリアを白で上書き
+  fill(0);
+  text(Dist1, 440, 200);  // Zumo2の最新モードを表示
+ fill(255);
+  rect(440, 600, 150, 40);  // Zumo2のモード表示エリアを白で上書き
+  fill(0);
+  text(Dist2, 440, 600);  // Zumo2の最新モードを表示
+fill(255);
+  rect(1030, 200, 150, 40);  // Zumo2のモード表示エリアを白で上書き
+  fill(0);
+  text(Dist3, 1030, 200);  // Zumo2の最新モードを表示
   // シリアルデータがあるかをチェックし、読み取る
 }
 
 void serialEvent(Serial p)
 {
-   if (p.available() >= 2) {
+   if (p.available() >= 3) {
     if(p.read()=='H')
     {
       if(p==Zumo1)
       {
         data1=p.read();
         mode1=updateMode(data1);
+        Dist1=p.read();
       }
       else if(p==Zumo2)
       {
         data2 = p.read();
         mode2 = updateMode(data2);
+        Dist2=p.read();
       }
       else if(p==Zumo3)
       {
         data3 = p.read();
         mode3 = updateMode(data3);
+        Dist2=p.read();
       }
       p.clear();
     }
