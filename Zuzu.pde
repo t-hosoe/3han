@@ -11,6 +11,10 @@ String mode3 = "Waiting";  // モードの文字列を初期化
 int Dist1 = 0;
 int Dist2 = 0;
 int Dist3 = 0;
+int direction1 = 0; // Zumo1の方向
+int direction2 = 0; // Zumo2の方向
+int direction3 = 0; // Zumo3の方向
+
 
 void setup() {
  
@@ -42,6 +46,9 @@ void setup() {
   text("mode:", 950, 30);
   text("TIME       :", 630, 500);
   text("GET CUP:", 630, 600);
+　text("Direction:", 30, 70);
+  text("Direction:", 30, 470);
+  text("Direction:", 630, 70);
 }
 
 void draw() {
@@ -73,12 +80,27 @@ fill(255);
   rect(1030, 200, 150, 40);  // Zumo2のモード表示エリアを白で上書き
   fill(0);
   text(Dist3, 1040, 230);  // Zumo2の最新モードを表示
+ // 方向の表示
+  fill(255);
+  rect(150, 50, 100, 40);
+  fill(0);
+  text(direction1, 160, 70); // Zumo1の方向を表示
+
+  fill(255);
+  rect(150, 450, 100, 40);
+  fill(0);
+  text(direction2, 160, 470); // Zumo2の方向を表示
+
+  fill(255);
+  rect(750, 50, 100, 40);
+  fill(0);
+  text(direction3, 760, 70); // Zumo3の方向を表示
   // シリアルデータがあるかをチェックし、読み取る
 }
 
 void serialEvent(Serial p)
 {
-   if (p.available() >= 3) {
+   if (p.available() >= 4) {
     if(p.read()=='H')
     {
       if(p==Zumo1)
@@ -86,18 +108,21 @@ void serialEvent(Serial p)
         data1=p.read();
         mode1=updateMode(data1);
         Dist1=p.read();
+        direction1 = p.read(); // Zumo1の方向を読み取り
       }
       else if(p==Zumo2)
       {
         data2 = p.read();
         mode2 = updateMode(data2);
         Dist2=p.read();
+        direction2 = p.read(); // Zumo1の方向を読み取り
       }
       else if(p==Zumo3)
       {
         data3 = p.read();
         mode3 = updateMode(data3);
         Dist3=p.read();
+        direction3 = p.read(); // Zumo1の方向を読み取り
       }
       p.clear();
     }
