@@ -55,6 +55,8 @@ void loop()
   mx = map(compass.m.x,compass.m_min.x,compass.m_max.x,-128,127);
   my = map(compass.m.y,compass.m_min.y,compass.m_max.y,-128,127);
   mz = map(compass.m.z,compass.m_min.z,compass.m_max.z,-128,127); 
+  heading_G = atan2(my,mx) * 180 / M_PI;
+  
   sendData(); // データ送信
 
   movement();
@@ -101,3 +103,7 @@ void sendData()
     timePrev = timeNow_G;
   }
 }
+int checkHead(float G){
+  if(339<=G&&G<=360||0<=G<=22){
+
+  
