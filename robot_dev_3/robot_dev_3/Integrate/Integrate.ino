@@ -18,7 +18,7 @@ int dist;
 float mx=0, my=0, mz=0;
 float ax=0, ay=0, az=0;
 float heading_G = 0;
-
+int Head=0;
 void setup()
 {
   button.waitForButton(); //ユーザボタンが押されるまで待機
@@ -56,7 +56,7 @@ void loop()
   my = map(compass.m.y,compass.m_min.y,compass.m_max.y,-128,127);
   mz = map(compass.m.z,compass.m_min.z,compass.m_max.z,-128,127); 
   heading_G = atan2(my,mx) * 180 / M_PI;
-  
+  Head=checkHead(heading_G);
   sendData(); // データ送信
 
   movement();
@@ -95,6 +95,7 @@ void sendData()
     Serial.write('H');
     Serial.write(mode_G);
     Serial.write(dist);
+    Serial.write(Head);
     
     //Serial.write((int)red_G);
     //Serial.write((int)green_G );
@@ -104,6 +105,43 @@ void sendData()
   }
 }
 int checkHead(float G){
-  if(339<=G&&G<=360||0<=G<=22){
+  int hougaku;
+  if(337.5<G&&G<=360||0<=G<=22.5){
+    hougaku=1;//北
+  }
+  else if(22.5<G&&G<=67.5)
+  {
+    hougaku=2;//北東
+  }
+  else if(67.5<G&&G<=112.5)
+  {
+    hougaku=3;//東
+  }
+   else if(112.5<G&&G<=157.5)
+  {
+    hougaku=4;//南東
+  }
+   else if(157.5<G&&G<=202.5)
+  {
+    hougaku=5;//南
+  }
+  else if(202.5<G&&G<=247.5)
+  {
+    hougaku=6;//南西
+  }
+   else if(247.5<G&&G<=292.5)
+  {
+    hougaku=7;//西
+  }
+   else if(292.5<G&&G<=337.5)
+  {
+    hougaku=2;//北西
+  }
+  return hougaku;
+}
+
+  
+ 
+
 
   
