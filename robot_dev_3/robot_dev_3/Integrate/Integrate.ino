@@ -20,6 +20,8 @@ float ax=0, ay=0, az=0;
 float  heading_G= 0;
 float heading_p = 0;
 bool color_b;
+bool change_black;
+bool mp;
 int move_color;
 int Head=0;
 
@@ -31,9 +33,9 @@ void setup()
   pinMode(echo, INPUT); //echo を入力ポートに設定
   Wire.begin();
   setupCompass();
-  button.waitForButton();
-  calibrationCompass();
+  button.waitForButton(); 
   CalibrationColorSensor();
+  calibrationCompass();
   button.waitForButton();
   timeInit_G = millis();
   timePrev_G=0;
@@ -41,6 +43,8 @@ void setup()
   motorR_G = 0;
   motorL_G = 0;
   color_b = true;
+  change_black = false;
+  mp = false;
   move_color = 0;
 }
 
