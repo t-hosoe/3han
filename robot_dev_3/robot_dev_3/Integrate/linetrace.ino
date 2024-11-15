@@ -39,6 +39,30 @@ float turnTo(float theta_r) {
   return u;
 }
 
+void linetrace_P()
+{
+  static float lightMin = 50; // 各自で設定
+  static float lightMax = 150; // 各自で設定
+  static float speed = 80; // パラメーター
+  static float Kp = 1.3; // パラメーター
+  float lightNow;
+  float speedDiff;
+
+  lightNow = (red_G + green_G + blue_G) / 3.0;
+  if (lightNow < (lightMin + lightMax) / 2.0) // 右回転
+    speedDiff = -Kp * map(speed, 0, 100, lightMin,(lightMin + lightMax) / 2.0);
+  else if(lightNow > (lightMin + lightMax) / 2.0) // 左回転
+    speedDiff = Kp * map(speed, 0, 100, lightMax,(lightMin + lightMax) / 2.0);
+  else 
+    speedDiff = 0;
+
+  motorL_G = speed - speedDiff;//反時計回り
+  motorR_G = speed + speedDiff;
+
+  //motorL_G = speed + speedDiff;//時計回り
+  //motorR_G = speed - speedDiff;
+}
+
 void movement()
 {
   float diff;
@@ -51,21 +75,30 @@ void movement()
   {
     case 0:
       startTime = timeNow_G;//start時間を保存
+      
       mode_G = 1;//モードを1に変更する
       break;  // break文を忘れない（忘れるとその下も実行される）
 
     case 1:
-      motors.setSpeeds(200, 200);//100の速度でロボットを動かす
+      change_black = false;
+      motors.setSpeeds(150, 150);//100の速度でロボットを動かす
       if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
-        mode_G = 2;
+      {
+        if(mp == false){
+          mode_G = 2;
+        }else if(mp == true){
+         mp = false;
+        }
+      }
+        
       break;
       
    case 2:
-      motors.setSpeeds(150, -150);//150の速度で回転する
+      motors.setSpeeds(160, -160);//150の速度で回転する
       if(0 < dist && dist < 15){//物体との距離が15cm以内になったらモードを3にする
         mode_G = 3; 
       }
-      if(maintainState(2000))
+      if(maintainState(2500))
         mode_G = 1;//nマイクロ秒経ったらモードを2にする
     break;
    case 3:
@@ -75,25 +108,38 @@ void movement()
       motors.setSpeeds(0, 0);
       mode_G =4;         
       delay(1000);
-      if(dist > 5){//物体との距離が5cm以上になるとモードを1にする
-        mode_G = 1;
-      }
     }
     break;
     case 4: 
       diff = turnTo(0);
-      motorL_G = diff;
-      motorR_G = -diff;
+      motorL_G = diff*0.7;
+      motorR_G = -diff*0.7;
       motors.setSpeeds(motorL_G, motorR_G);
       if(abs(0-heading_G)<= 5){
         mode_G = 5;
       }
     break;
     case 5:
-      motors.setSpeeds(150, 150);
-      if(move_color == 2 || move_color == 3){
-        mode_G = 0;
+      change_black = true;
+      motors.setSpeeds(100, 100);
+      if(move_color == 2){
+        mode_G = 1;
       }
+
+      if(move_color == 3){
+        mode_G = 1;
+      }
+
+      if(move_color == 1){
+        mode_G = 6;
+      }
+    break;
+    case 6:
+    linetrace_P();
+    motors.setSpeeds(motorL_G, motorR_G);
+    if(move_color == 2){
+      mode_G = 1;
+    }
   } 
   }
 
@@ -101,12 +147,15 @@ void movement()
     case 0:
       break;
     case 1:
-      color_b = false;
-      motors.setSpeeds(-100, -100);
-      delay(1000);
-      motors.setSpeeds(150, -150);
-      delay(1400);
-      color_b = true;
+      if(change_black == false){
+        color_b = false;
+        motors.setSpeeds(-100, -100);
+        delay(1000);
+        motors.setSpeeds(150, -150);
+        delay(1400);
+        color_b = true;
+        mp = true;
+      }
       break;
     case 2:
       color_b = false;
@@ -117,6 +166,7 @@ void movement()
       motors.setSpeeds(150, -150);
       delay(1400);
       color_b = true;
+      mp = true;
       break;
     case 3:
       color_b = false;
@@ -127,6 +177,7 @@ void movement()
       motors.setSpeeds(150, -150);
       delay(1400);
       color_b = true;
+      mp = true;
       break;
     case 4:
       break;
