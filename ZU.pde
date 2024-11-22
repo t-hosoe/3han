@@ -2,9 +2,18 @@ import processing.serial.*;
 
 Serial Zumo1,Zumo2,Zumo3;
 int data=0;
-int data1 = 0;
-int data2 = 0;
-int data3 = 0;
+int data1_1 = 0;
+int data1_2= 0;
+int data1_3 = 0;
+int data1_4 = 0;
+int data2_1 = 0;
+int data2_2 = 0;
+int data2_3 = 0;
+int data2_4 = 0;
+int data3_1 = 0;
+int data3_2 = 0;
+int data3_3 = 0;
+int data3_4 = 0;
 String mode1 = "Waiting";  // モードの文字列を初期化
 String mode2 = "Waiting";  // モードの文字列を初期化
 String mode3 = "Waiting";  // モードの文字列を初期化
@@ -100,29 +109,52 @@ fill(255);
 
 void serialEvent(Serial p)
 {
-   if (p.available() >= 3) {
+   if (p.available() >= 4) {
     if(p.read()=='H')
     {
       if(p==Zumo1)
       {
-        data1=p.read();
-        mode1=updateMode(data1);
-        Dist1=p.read();
-        //direction1 = p.read(); // Zumo1の方向を読み取り
-      }
+        data1_1=p.read();        
+        data1_2=p.read();
+        data1_3=p.read(); // Zumo1の方向を読み取り
+        if(data1_1<10){
+         mode1=updateMode(data1_1); 
+        }
+        if(data1_2<80){
+        Dist1=data1_2;
+        }
+        if(data1_3<10){
+        direction1=data1_3;
+        }
       else if(p==Zumo2)
       {
-        data2 = p.read();
-        mode2 = updateMode(data2);
-        Dist2=p.read();
-        //direction2 = p.read(); // Zumo1の方向を読み取り
+        data2_1=p.read();        
+        data2_2=p.read();
+        data2_3=p.read(); // Zumo1の方向を読み取り
+        if(data2_1<10){
+         mode2=updateMode(data2_1); 
+        }
+        if(data2_2<80){
+        Dist2=data2_2;
+        }
+        if(data2_3<10){
+        direction2=data2_3;
+        }
       }
       else if(p==Zumo3)
       {
-        data3 = p.read();
-        mode3 = updateMode(data3);
-        Dist3=p.read();
-        //direction3 = p.read(); // Zumo1の方向を読み取り
+        data3_1=p.read();        
+        data3_2=p.read();
+        data3_3=p.read(); // Zumo1の方向を読み取り
+        if(data3_1<10){
+         mode3=updateMode(data3_1); 
+        }
+        if(data3_2<80){
+        Dist1=data3_2;
+        }
+        if(data3_3<10){
+        direction3=data3_3;
+        }
       }
       p.clear();
     }
