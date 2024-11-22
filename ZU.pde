@@ -106,6 +106,8 @@ fill(255);
   text(direction3, 760, 70); // Zumo3の方向を表示
   // シリアルデータがあるかをチェックし、読み取る
    // 各 Zumo の矢印を描画
+  // 矢印を消去する（例：150, 100 の矢印を消す）
+  clearArrow(150, 100, 100); // 中心 (150, 100)、半径 100 の円で消去
   drawArrow(150, 100, direction1);
   drawArrow(150, 500, direction2);
   drawArrow(750, 100, direction3);
@@ -203,6 +205,12 @@ void drawArrow(int x, int y, int direction) {
   float tip2Y = endY - sin(arrowAngle2) * arrowSize;
   fill(0);
   triangle(endX, endY, tip1X, tip1Y, tip2X, tip2Y);
+}
+// 矢印を消す関数
+void clearArrow(int x, int y, int radius) {
+  fill(255); // 白色で塗りつぶす
+  noStroke();
+  ellipse(x, y, radius, radius); // 中心に円を描画
 }
 
 // シリアルからのデータを受信してモードを更新
