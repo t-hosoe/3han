@@ -9,6 +9,7 @@ LSM303 compass;
 
 const int trig = 2;              //TrigピンをArduinoの2番ピンに
 const int echo = 4;              //EchoピンをArduinoの4番ピンに
+const int buzzerPin = 3;              //超音波センサのglobal関数
 float red_G, green_G, blue_G; // カラーセンサで読み取ったRGB値（0-255）
 bool isRed_G, isBlue_G;
 int mode_G; // タスクのモードを表す状態変数
@@ -24,6 +25,8 @@ bool change_black;
 bool mp;
 int move_color;
 int Head=0;
+int moveRobot;
+int checkDist;
 
 void setup()
 {
