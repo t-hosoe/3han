@@ -30,8 +30,8 @@ void setup() {
 
   // シリアルポートの初期化
   Zumo1 = new Serial(this, "/dev/ttyUSB0", 9600);
-  Zumo2 = new Serial(this, "/dev/ttyUSB1", 9600);
-  Zumo3 = new Serial(this, "/dev/ttyUSB2", 9600);
+  //Zumo2 = new Serial(this, "/dev/ttyUSB1", 9600);
+  //Zumo3 = new Serial(this, "/dev/ttyUSB2", 9600);
   
   size(1200, 800);
   background(255);
@@ -55,7 +55,7 @@ void setup() {
   text("mode:", 950, 30);
   text("TIME       :", 630, 500);
   text("GET CUP:", 630, 600);
-　text("Direction:", 30, 70);
+ text("Direction:", 30, 70);
   text("Direction:", 30, 470);
   text("Direction:", 630, 70);
 }
@@ -162,9 +162,9 @@ void serialEvent(Serial p)
   }
 }
   
-
+}
 // キーが押されたときの動作
-void keyPressed() {
+void keyPressed(){
   if (key == 's') {
     noLoop();  // draw()の繰返し処理を停止
   } else if (key == 'c') {
