@@ -63,22 +63,19 @@ void linetrace_P()
   //motorR_G = speed - speedDiff;
 }
 
-void checkMovemnt(){
+/*void checkMovement(){
+    cm = false;
     motors.setSpeeds(0, 0);
-    if(millis() - startTime < 1000){
+    if(timeNow_G - checkStart > 1000){
       moveRobot = dist - checkDist;
-      if(moveRobot < -3 || moveRobot > 3){
+      if(moveRobot > 5 || moveRobot < -5 ){
         tone(buzzerPin,200); 
-         motors.setSpeeds(0, 0);
-        if(dist > 15){
-          mode_G = 1;
-        }
-     break;     
+         mode_G = 1;
+      }else if(moveRobot < 5 || moveRobot > -5){
+        cm = true;
       }
     }
-    else{
-    }
-}
+}*/
 
 void movement()
 {
@@ -98,7 +95,7 @@ void movement()
 
     case 1:
       change_black = false;
-      motors.setSpeeds(150, 150);//100の速度でロボットを動かす
+      motors.setSpeeds(200, 200);//100の速度でロボットを動かす
       if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
       {
         if(mp == false){
@@ -112,10 +109,12 @@ void movement()
       
    case 2:
       motors.setSpeeds(160, -160);//150の速度で回転する
-      if(0 < dist && dist < 15){//物体との距離が15cm以内になったらモードを3にする
-        mode_G = 3;
-        checkDist=dist; 
+      if(0 < dist && dist < 25){//物体との距離が15cm以内になったらモードを3にする
+        /*checkDist=dist;
+        checkStart = timeNow_G; 
         checkMovement();
+        if(cm == true)*/
+          mode_G = 3;
       }
       if(maintainState(2500))
         mode_G = 1;//nマイクロ秒経ったらモードを2にする
@@ -124,7 +123,7 @@ void movement()
     if(dist >= 5){//物体との距離が5cm以内になるまで前進
       motors.setSpeeds(150,150);
       straight_time = timeNow_G; 
-    }else if(timeNow_G - straight_time > 5000 && dist >= 5){
+    }else if(timeNow_G - straight_time > 4000 && dist >= 5){
       mode_G = 1;
     }else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
       motors.setSpeeds(0, 0);
@@ -143,7 +142,7 @@ void movement()
     break;
     case 5:
       change_black = true;
-      motors.setSpeeds(100, 100);
+      motors.setSpeeds(110, 110);
       if(move_color == 2){
         mode_G = 1;
       }
@@ -162,6 +161,9 @@ void movement()
     if(move_color == 2){
       mode_G = 1;
     }
+    if(move_color == 3){
+      mode_G = 1;
+    }
   } 
   }
 
@@ -174,7 +176,7 @@ void movement()
         motors.setSpeeds(-100, -100);
         delay(1000);
         motors.setSpeeds(150, -150);
-        delay(1400);
+        delay(1300);
         color_b = true;
         mp = true;
       }
@@ -186,7 +188,7 @@ void movement()
       motors.setSpeeds(-150, -150);
       delay(1000);
       motors.setSpeeds(150, -150);
-      delay(1400);
+      delay(1200);
       color_b = true;
       mp = true;
       break;
@@ -197,7 +199,7 @@ void movement()
       motors.setSpeeds(-150, -150);
       delay(1000);
       motors.setSpeeds(150, -150);
-      delay(1400);
+      delay(1200);
       color_b = true;
       mp = true;
       break;
