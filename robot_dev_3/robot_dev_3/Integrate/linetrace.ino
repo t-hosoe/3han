@@ -123,7 +123,7 @@ void movement()
     if(dist >= 5){//物体との距離が5cm以内になるまで前進
       motors.setSpeeds(150,150);
       straight_time = timeNow_G; 
-    }else if(timeNow_G - straight_time > 4000 && dist >= 5){
+    }else if(timeNow_G - straight_time > 4000 && dist > 5){
       mode_G = 1;
     }else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
       motors.setSpeeds(0, 0);
@@ -132,12 +132,14 @@ void movement()
     }
     break;
     case 4: 
-      diff = turnTo(0);
+      diff = turnTo(30);
       motorL_G = diff*0.7;
       motorR_G = -diff*0.7;
       motors.setSpeeds(motorL_G, motorR_G);
-      if(abs(0-heading_G)<= 5){
+      if(abs(0-heading_G)<= 5 && dist < 5){
         mode_G = 5;
+      }else if(dist >=15){
+        mode_G = 1;
       }
     break;
     case 5:
