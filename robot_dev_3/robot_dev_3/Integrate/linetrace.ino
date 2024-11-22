@@ -133,8 +133,8 @@ void movement()
     break;
     case 4: 
       diff = turnTo(30);
-      motorL_G = diff*0.7;
-      motorR_G = -diff*0.7;
+      motorL_G = diff*0.8;
+      motorR_G = -diff*0.8;
       motors.setSpeeds(motorL_G, motorR_G);
       if(abs(0-heading_G)<= 5 && dist < 5){
         mode_G = 5;
