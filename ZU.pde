@@ -105,6 +105,10 @@ fill(255);
   fill(0);
   text(direction3, 760, 70); // Zumo3の方向を表示
   // シリアルデータがあるかをチェックし、読み取る
+   // 各 Zumo の矢印を描画
+  drawArrow(150, 100, direction1);
+  drawArrow(150, 500, direction2);
+  drawArrow(750, 100, direction3);
 }
 
 void serialEvent(Serial p)
@@ -171,6 +175,34 @@ void keyPressed(){
     background(255);  // 背景を再描画
     loop();  // draw()の繰返し処理を再開
   }
+}
+
+void drawArrow(int x, int y, int direction) {
+  // 方向が有効でない場合は表示しない
+  if (direction < 1 || direction > 8) return;
+  
+  // 方角に応じた角度 (北=1で 0 度から時計回りに 45 度ずつ増加)
+  float angle = radians((direction - 1) * 45);
+
+  // 矢印の長さと計算
+  int len = 50; // 矢印の長さ
+  int arrowSize = 10; // 矢印の先端サイズ
+  float endX = x + cos(angle) * len;
+  float endY = y - sin(angle) * len;
+
+  // 矢印を描画
+  stroke(0);
+  line(x, y, endX, endY);
+
+  // 矢印先端の三角形を描画
+  float arrowAngle1 = angle + radians(135);
+  float arrowAngle2 = angle - radians(135);
+  float tip1X = endX + cos(arrowAngle1) * arrowSize;
+  float tip1Y = endY - sin(arrowAngle1) * arrowSize;
+  float tip2X = endX + cos(arrowAngle2) * arrowSize;
+  float tip2Y = endY - sin(arrowAngle2) * arrowSize;
+  fill(0);
+  triangle(endX, endY, tip1X, tip1Y, tip2X, tip2Y);
 }
 
 // シリアルからのデータを受信してモードを更新
