@@ -63,6 +63,23 @@ void linetrace_P()
   //motorR_G = speed - speedDiff;
 }
 
+void checkMovemnt(){
+    motors.setSpeeds(0, 0);
+    if(millis() - startTime < 1000){
+      moveRobot = dist - checkDist;
+      if(moveRobot < -3 || moveRobot > 3){
+        tone(buzzerPin,200); 
+         motors.setSpeeds(0, 0);
+        if(dist > 15){
+          mode_G = 1;
+        }
+     break;     
+      }
+    }
+    else{
+    }
+}
+
 void movement()
 {
   float diff;
@@ -96,7 +113,9 @@ void movement()
    case 2:
       motors.setSpeeds(160, -160);//150の速度で回転する
       if(0 < dist && dist < 15){//物体との距離が15cm以内になったらモードを3にする
-        mode_G = 3; 
+        mode_G = 3;
+        checkDist=dist; 
+        checkMovement();
       }
       if(maintainState(2500))
         mode_G = 1;//nマイクロ秒経ったらモードを2にする
