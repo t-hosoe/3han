@@ -11,8 +11,8 @@ int distance() {
 
   delay(60);                     //trigがHIGHになる間隔を60ms以上空ける（超音波センサの仕様）
 
-  if(dist >=150)
-    dist = 150;
+  if(dist >=120)
+    dist = 120;
 
   return dist;
 }
@@ -177,9 +177,6 @@ void movement_North()
 
     break;
     case 4: 
-      if(dist >=10){
-        mode_G = 1;
-      }else if(dist < 10){
         diff = turnTo(10);
         motorL_G = diff*0.8;
         motorR_G = -diff*0.8;
@@ -189,7 +186,7 @@ void movement_North()
         }else if(dist >=15){
           mode_G = 1;
         }
-      }
+      
     break;
     case 5:
       change_black = true;
@@ -280,9 +277,7 @@ void movement_South()
     }
     break;
     case 4: 
-      if(dist >=  10){
-        mode_G = 1;
-      }else if(dist < 10){
+      
         diff = turnTo(180);
         motorL_G = diff*0.8;
         motorR_G = -diff*0.8;
@@ -292,7 +287,7 @@ void movement_South()
         }else if(dist >=15){
           mode_G = 1;
         }
-      }
+      
     break;
     case 5:
       change_black = true;
