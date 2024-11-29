@@ -27,7 +27,7 @@ void draw() {
   drawMeter(1000, 200, Dist3, "Zumo3", mode3, direction3, color3);
 }
 
-void drawMeter(int x, int y, int distance, String label, String mode, int direction, int color) {
+void drawMeter(int x, int y, int distance, String label, String mode, int direction, int colored) {
   // ラベルとモード
   fill(0);
   text(label, x, y - 140);
@@ -40,7 +40,7 @@ void drawMeter(int x, int y, int distance, String label, String mode, int direct
   drawDistanceBar(x, y + 80, distance);
 
   // 色を表示
-  drawColor(x, y + 120, color);
+  drawColor(x, y + 120, colored);
 }
 
 void drawArrow(int x, int y, int direction) {
@@ -85,9 +85,9 @@ void drawDistanceBar(int x, int y, int distance) {
   text(distance + " cm", x, y + 40);
 }
 
-void drawColor(int x, int y, int color) {
+void drawColor(int x, int y, int colored) {
   // 色に基づいて背景色を変更
-  switch (color) {
+  switch (colored) {
     case 0:
       fill(255); // White
       break;
