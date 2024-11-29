@@ -2,28 +2,32 @@ import processing.serial.*;
 
 Serial Zumo1, Zumo2, Zumo3;
 int data = 0;
-int data1 = 0;
-int data2 = 0;
-int data3 = 0;
+int data1_1 = 0;
+int data1_2 = 0;
+int data1_3 = 0;
+int data2_1 = 0;
+int data2_2 = 0;
+int data2_3 = 0;
+int data3_1 = 0;
+int data3_2 = 0;
+int data3_3 = 0;
 String mode1 = "Waiting";
 String mode2 = "Waiting";
 String mode3 = "Waiting";
 int Dist1 = 0;
 int Dist2 = 0;
 int Dist3 = 0;
-int direction1 = -1;
-int direction2 = -1;
-int direction3 = -1;
+int direction1 = 0;
+int direction2 = 0;
+int direction3 = 0;
 
 void setup() {
   Zumo1 = new Serial(this, "/dev/ttyUSB0", 9600);
-  Zumo2 = new Serial(this, "/dev/ttyUSB1", 9600);
-  Zumo3 = new Serial(this, "/dev/ttyUSB2", 9600);
-  
   size(1200, 800);
   background(255);
   stroke(0);
 
+  // 各四角形エリアの描画
   quad(0, 0, 0, 400, 600, 400, 600, 0);
   quad(0, 400, 0, 800, 600, 800, 600, 400);
   quad(600, 0, 600, 400, 1200, 400, 1200, 0);
@@ -31,6 +35,8 @@ void setup() {
 
   textSize(30);
   fill(0);
+
+  // ラベルを配置
   text("Zumo1", 30, 30);
   text("Zumo2", 30, 430);
   text("Zumo3", 630, 30);
@@ -39,85 +45,101 @@ void setup() {
   text("mode:", 950, 30);
   text("TIME       :", 630, 500);
   text("GET CUP:", 630, 600);
-  text("Direction:", 30, 70);
-  text("Direction:", 30, 470);
-  text("Direction:", 630, 70);
 }
 
 void draw() {
-  clearSection(440, 0, 150, 40);
+  background(255);
+
+  // 更新されたデータを描画
+  fill(0);
   text(mode1, 450, 30);
-  
-  clearSection(440, 400, 150, 40);
   text(mode2, 450, 430);
-  
-  clearSection(1030, 0, 150, 40);
   text(mode3, 1040, 30);
-  
-  clearSection(440, 200, 150, 40);
-  text(Dist1, 450, 230);
 
-  clearSection(440, 600, 150, 40);
-  text(Dist2, 450, 630);
+  // 各ロボットの距離メーターを描画
+  drawMeter(650, 100, Dist1, "Zumo1 Distance");
+  drawMeter(650, 300, Dist2, "Zumo2 Distance");
+  drawMeter(650, 500, Dist3, "Zumo3 Distance");
+}
 
-  clearSection(1030, 200, 150, 40);
-  text(Dist3, 1040, 230);
+void drawMeter(int x, int y, int value, String label) {
+  fill(0);
+  text(label, x, y - 20);
 
-  clearSection(150, 50, 100, 40);
-  text(direction1, 160, 70);
+  int maxBarWidth = 400; // メーターの最大幅
+  int barHeight = 30;   // メーターの高さ
 
-  clearSection(150, 450, 100, 40);
-  text(direction2, 160, 470);
+  // メーター背景
+  fill(200);
+  rect(x, y, maxBarWidth, barHeight);
 
-  clearSection(750, 50, 100, 40);
-  text(direction3, 760, 70);
+  // 距離に基づいたメーターの進捗
+  int barWidth = (int) map(value, 0, 80, 0, maxBarWidth);
+  fill(0, 255, 0);
+  rect(x, y, barWidth, barHeight);
+
+  // 距離のテキストを表示
+  fill(0);
+  text(value + " cm", x + maxBarWidth + 10, y + barHeight / 2 + 5);
 }
 
 void serialEvent(Serial p) {
   if (p.available() >= 4) {
-    char header = p.readChar();
-    if (header == 'H') {
-      int mode = p.read();
-      int dist = p.read();
-      int direction = p.read();
-      
+    if (p.read() == 'H') {
       if (p == Zumo1) {
-        mode1 = updateMode(mode);
-        Dist1 = dist;
-        direction1 = direction;
+        data1_1 = p.read();
+        data1_2 = p.read();
+        data1_3 = p.read();
+        if (data1_1 < 10) {
+          mode1 = updateMode(data1_1);
+        }
+        if (data1_2 < 80) {
+          Dist1 = data1_2;
+        }
+        if (data1_3 < 10) {
+          direction1 = data1_3;
+        }
       } else if (p == Zumo2) {
-        mode2 = updateMode(mode);
-        Dist2 = dist;
-        direction2 = direction;
+        data2_1 = p.read();
+        data2_2 = p.read();
+        data2_3 = p.read();
+        if (data2_1 < 10) {
+          mode2 = updateMode(data2_1);
+        }
+        if (data2_2 < 80) {
+          Dist2 = data2_2;
+        }
+        if (data2_3 < 10) {
+          direction2 = data2_3;
+        }
       } else if (p == Zumo3) {
-        mode3 = updateMode(mode);
-        Dist3 = dist;
-        direction3 = direction;
+        data3_1 = p.read();
+        data3_2 = p.read();
+        data3_3 = p.read();
+        if (data3_1 < 10) {
+          mode3 = updateMode(data3_1);
+        }
+        if (data3_2 < 80) {
+          Dist3 = data3_2;
+        }
+        if (data3_3 < 10) {
+          direction3 = data3_3;
+        }
       }
+      p.clear();
     }
   }
 }
 
 String updateMode(int data) {
   switch (data) {
-    case 1: return "Straight";
-    case 2: return "Roll";
-    case 3: return "Stop";
-    default: return "Unknown";
-  }
-}
-
-void clearSection(int x, int y, int w, int h) {
-  fill(255);
-  rect(x, y, w, h);
-  fill(0);
-}
-
-void keyPressed() {
-  if (key == 's') {
-    noLoop();
-  } else if (key == 'c') {
-    background(255);
-    loop();
+    case 1:
+      return "Straight";
+    case 2:
+      return "Roll";
+    case 3:
+      return "Stop";
+    default:
+      return "Unknown";
   }
 }
