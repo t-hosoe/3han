@@ -107,37 +107,30 @@ void drawColor(int x, int y, int colored) {
 }
 
 void serialEvent(Serial p) {
-  if (p.available() >= 5) { // Change the check to 5 for color data
-    if (p.read() == 'H') {
+  while (p.available() >= 5) { // バッファに5バイト以上のデータがある場合に処理
+    if (p.read() == 'H') { // ヘッダ確認
+      int data1 = p.read();
+      int data2 = p.read();
+      int data3 = p.read();
+      int data4 = p.read(); // 色データ
+
+      // データのバリデーションと割り当て
       if (p == Zumo1) {
-        int data1_1 = p.read();
-        int data1_2 = p.read();
-        int data1_3 = p.read();
-        int data1_4 = p.read(); // Read color data
-        if (data1_1 < 10) mode1 = updateMode(data1_1);
-        if (data1_2 < 80) Dist1 = data1_2;
-        if (data1_3 < 10) direction1 = data1_3;
-        if (data1_4 >= 0 && data1_4 <= 3) color1 = data1_4; // Set color1 based on received value
+        if (data1 >= 0 && data1 <= 9) mode1 = updateMode(data1);
+        if (data2 >= 0 && data2 <= 80) Dist1 = data2; // 距離は0～80の範囲内
+        if (data3 >= 1 && data3 <= 8) direction1 = data3; // 方向は1～8
+        if (data4 >= 0 && data4 <= 3) color1 = data4; // 色は0～3
       } else if (p == Zumo2) {
-        int data2_1 = p.read();
-        int data2_2 = p.read();
-        int data2_3 = p.read();
-        int data2_4 = p.read(); // Read color data
-        if (data2_1 < 10) mode2 = updateMode(data2_1);
-        if (data2_2 < 80) Dist2 = data2_2;
-        if (data2_3 < 10) direction2 = data2_3;
-        if (data2_4 >= 0 && data2_4 <= 3) color2 = data2_4; // Set color2 based on received value
+        if (data1 >= 0 && data1 <= 9) mode2 = updateMode(data1);
+        if (data2 >= 0 && data2 <= 80) Dist2 = data2;
+        if (data3 >= 1 && data3 <= 8) direction2 = data3;
+        if (data4 >= 0 && data4 <= 3) color2 = data4;
       } else if (p == Zumo3) {
-        int data3_1 = p.read();
-        int data3_2 = p.read();
-        int data3_3 = p.read();
-        int data3_4 = p.read(); // Read color data
-        if (data3_1 < 10) mode3 = updateMode(data3_1);
-        if (data3_2 < 80) Dist3 = data3_2;
-        if (data3_3 < 10) direction3 = data3_3;
-        if (data3_4 >= 0 && data3_4 <= 3) color3 = data3_4; // Set color3 based on received value
+        if (data1 >= 0 && data1 <= 9) mode3 = updateMode(data1);
+        if (data2 >= 0 && data2 <= 80) Dist3 = data2;
+        if (data3 >= 1 && data3 <= 8) direction3 = data3;
+        if (data4 >= 0 && data4 <= 3) color3 = data4;
       }
-      p.clear();
     }
   }
 }
