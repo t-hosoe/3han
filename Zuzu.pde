@@ -42,11 +42,11 @@ void drawMeter(int x, int y, int distance, String label, String mode, int direct
 void drawArrow(int x, int y, int direction) {
   if (direction < 1 || direction > 8) return;
 
-  float angle = radians((direction - 1) * 45);
+  float angle = radians((direction - 1) * 45 - 90); // 修正: 北を基準に時計回り
   int len = 50;
   int arrowSize = 10;
   float endX = x + cos(angle) * len;
-  float endY = y - sin(angle) * len;
+  float endY = y + sin(angle) * len;
 
   stroke(0);
   line(x, y, endX, endY);
@@ -54,8 +54,8 @@ void drawArrow(int x, int y, int direction) {
   float arrowAngle1 = angle + radians(135);
   float arrowAngle2 = angle - radians(135);
   triangle(endX, endY,
-           endX + cos(arrowAngle1) * arrowSize, endY - sin(arrowAngle1) * arrowSize,
-           endX + cos(arrowAngle2) * arrowSize, endY - sin(arrowAngle2) * arrowSize);
+           endX + cos(arrowAngle1) * arrowSize, endY + sin(arrowAngle1) * arrowSize,
+           endX + cos(arrowAngle2) * arrowSize, endY + sin(arrowAngle2) * arrowSize);
 }
 
 void drawDistanceBar(int x, int y, int distance) {
@@ -75,6 +75,10 @@ void drawDistanceBar(int x, int y, int distance) {
   noFill();
   stroke(0);
   rect(x - barWidth / 2, y, barWidth, barHeight);
+
+  // 距離の数値
+  fill(0);
+  text(distance + " cm", x, y + 40);
 }
 
 void serialEvent(Serial p) {
@@ -109,9 +113,13 @@ void serialEvent(Serial p) {
 
 String updateMode(int data) {
   switch (data) {
+    case 0: return "Initialize";
     case 1: return "Straight";
-    case 2: return "Roll";
-    case 3: return "Stop";
+    case 2: return "Search";
+    case 3: return "Catch";
+    case 4: return "Direction";
+    case 5: return "Transport";
+    case 6: return "Linetrace";
     default: return "Unknown";
   }
 }
