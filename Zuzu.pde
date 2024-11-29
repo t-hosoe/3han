@@ -95,10 +95,10 @@ void drawColor(int x, int y, int colored) {
       fill(0);   // Black
       break;
     case 2:
-      fill(255, 0, 0); // Red
+      fill(0, 0, 255); // Blue
       break;
     case 3:
-      fill(0, 0, 255); // Blue
+      fill(255, 0, 0); // Red
       break;
     default:
       fill(200); // Default grey if unknown value
