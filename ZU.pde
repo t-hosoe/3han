@@ -7,8 +7,7 @@ int[] directions = {0, 0, 0};
 int[] colors = {0, 0, 0}; // New variables for color
 
 void setup() {
-  size(1200, 800);
-
+  size(1200, 600); // Window size adjusted for better layout
   // Initialize serial ports
   zumos[0] = new Serial(this, "/dev/ttyUSB0", 9600);
   zumos[1] = new Serial(this, "/dev/ttyUSB1", 9600);
@@ -24,24 +23,26 @@ void draw() {
 
   // Display meters for all Zumos
   for (int i = 0; i < 3; i++) {
-    drawMeter(200 + i * 400, 200, distances[i], "Zumo" + (i + 1), modes[i], directions[i], colors[i]);
+    int x = (i + 1) * width / 4; // Divide space evenly across width
+    int y = height / 2;         // Center vertically
+    drawMeter(x, y, distances[i], "Zumo" + (i + 1), modes[i], directions[i], colors[i]);
   }
 }
 
 void drawMeter(int x, int y, int distance, String label, String mode, int direction, int color) {
   // Label and mode
   fill(0);
-  text(label, x, y - 140);
-  text("Mode: " + mode, x, y - 100);
+  text(label, x, y - 120); // Move label up
+  text("Mode: " + mode, x, y - 80); // Adjust mode text position
 
   // Direction as arrow
-  drawArrow(x, y, direction);
+  drawArrow(x, y - 30, direction); // Position arrow slightly higher
 
   // Distance bar
-  drawDistanceBar(x, y + 80, distance);
+  drawDistanceBar(x, y + 30, distance); // Adjust distance bar position
 
   // Display color
-  drawColor(x, y + 120, color);
+  drawColor(x, y + 80, color); // Adjust color display position
 }
 
 void drawArrow(int x, int y, int direction) {
@@ -95,10 +96,10 @@ void drawColor(int x, int y, int color) {
       fill(0);   // Black
       break;
     case 2:
-      fill(255, 0, 0); // Red
+      fill(0, 0, 255); // Blue
       break;
     case 3:
-      fill(0, 0, 255); // Blue
+      fill(255, 0, 0); // Red
       break;
     default:
       fill(200); // Default grey if unknown value
