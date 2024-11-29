@@ -55,9 +55,6 @@ void setup() {
   text("mode:", 950, 30);
   text("TIME       :", 630, 500);
   text("GET CUP:", 630, 600);
- text("Direction:", 30, 70);
-  text("Direction:", 30, 470);
-  text("Direction:", 630, 70);
 }
 
 void draw() {
@@ -89,21 +86,6 @@ fill(255);
   rect(1030, 200, 150, 40);  // Zumo2のモード表示エリアを白で上書き
   fill(0);
   text(Dist3, 1040, 230);  // Zumo2の最新モードを表示
- // 方向の表示
-  fill(255);
-  rect(150, 50, 100, 40);
-  fill(0);
-  text(direction1, 160, 70); // Zumo1の方向を表示
-
-  fill(255);
-  rect(150, 450, 100, 40);
-  fill(0);
-  text(direction2, 160, 470); // Zumo2の方向を表示
-
-  fill(255);
-  rect(750, 50, 100, 40);
-  fill(0);
-  text(direction3, 760, 70); // Zumo3の方向を表示
   // シリアルデータがあるかをチェックし、読み取る
    // 各 Zumo の矢印を描画
   // 矢印を消去する（例：150, 100 の矢印を消す）
@@ -156,7 +138,7 @@ void serialEvent(Serial p)
          mode3=updateMode(data3_1); 
         }
         if(data3_2<80){
-        Dist1=data3_2;
+        Dist3=data3_2;
         }
         if(data3_3<10){
         direction3=data3_3;
