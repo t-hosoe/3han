@@ -1,14 +1,18 @@
 import processing.serial.*;
 
-Serial Zumo1, Zumo2, Zumo3;
-int Dist1 = 0, Dist2 = 0, Dist3 = 0;
-String mode1 = "Waiting", mode2 = "Waiting", mode3 = "Waiting";
-int direction1 = 0, direction2 = 0, direction3 = 0;
-int color1 = 0, color2 = 0, color3 = 0; // New variables for color
+Serial[] zumos = new Serial[3];
+int[] distances = {0, 0, 0};
+String[] modes = {"Waiting", "Waiting", "Waiting"};
+int[] directions = {0, 0, 0};
+int[] colors = {0, 0, 0}; // New variables for color
 
 void setup() {
-  size(1200, 800);
-  Zumo1 = new Serial(this, "/dev/ttyUSB0", 9600);
+  size(1200, 600); // Window size adjusted for better layout
+  // Initialize serial ports
+  zumos[0] = new Serial(this, "/dev/ttyUSB0", 9600);
+  zumos[1] = new Serial(this, "/dev/ttyUSB1", 9600);
+  zumos[2] = new Serial(this, "/dev/ttyUSB2", 9600);
+
   background(255);
   textAlign(CENTER, CENTER);
   textSize(20);
@@ -17,36 +21,34 @@ void setup() {
 void draw() {
   background(255);
 
-  // Zumo1の表示
-  drawMeter(200, 200, Dist1, "Zumo1", mode1, direction1, color1);
-
-  // Zumo2の表示
-  drawMeter(600, 200, Dist2, "Zumo2", mode2, direction2, color2);
-
-  // Zumo3の表示
-  drawMeter(1000, 200, Dist3, "Zumo3", mode3, direction3, color3);
+  // Display meters for all Zumos
+  for (int i = 0; i < 3; i++) {
+    int x = (i + 1) * width / 4; // Divide space evenly across width
+    int y = height / 2;         // Center vertically
+    drawMeter(x, y, distances[i], "Zumo" + (i + 1), modes[i], directions[i], colors[i]);
+  }
 }
 
 void drawMeter(int x, int y, int distance, String label, String mode, int direction, int colored) {
-  // ラベルとモード
+  // Label and mode
   fill(0);
-  text(label, x, y - 140);
-  text("Mode: " + mode, x, y - 100);
+  text(label, x, y - 120); // Move label up
+  text("Mode: " + mode, x, y - 80); // Adjust mode text position
 
-  // 矢印で方向表示
-  drawArrow(x, y, direction);
+  // Direction as arrow
+  drawArrow(x, y - 30, direction); // Position arrow slightly higher
 
-  // 距離を横棒のメーターで表示
-  drawDistanceBar(x, y + 80, distance);
+  // Distance bar
+  drawDistanceBar(x, y + 30, distance); // Adjust distance bar position
 
-  // 色を表示
-  drawColor(x, y + 120, colored);
+  // Display color
+  drawColor(x, y + 80, colored); // Adjust color display position
 }
 
 void drawArrow(int x, int y, int direction) {
   if (direction < 1 || direction > 8) return;
 
-  float angle = radians((direction - 1) * 45 - 90); // 修正: 北を基準に時計回り
+  float angle = radians((direction - 1) * 45 - 90); // Adjust to start from north
   int len = 50;
   int arrowSize = 10;
   float endX = x + cos(angle) * len;
@@ -67,26 +69,25 @@ void drawDistanceBar(int x, int y, int distance) {
   int barHeight = 20;
   float fillWidth = map(distance, 0, 100, 0, barWidth);
 
-  // 背景バー
+  // Background bar
   fill(200);
   rect(x - barWidth / 2, y, barWidth, barHeight);
 
-  // 距離に応じたフィル
+  // Fill based on distance
   fill(0, 255, 0);
   rect(x - barWidth / 2, y, fillWidth, barHeight);
 
-  // 枠線
+  // Outline
   noFill();
   stroke(0);
   rect(x - barWidth / 2, y, barWidth, barHeight);
 
-  // 距離の数値
+  // Distance text
   fill(0);
   text(distance + " cm", x, y + 40);
 }
 
 void drawColor(int x, int y, int colored) {
-  // 色に基づいて背景色を変更
   switch (colored) {
     case 0:
       fill(255); // White
@@ -107,37 +108,21 @@ void drawColor(int x, int y, int colored) {
 }
 
 void serialEvent(Serial p) {
-  if (p.available() >= 5) { // Change the check to 5 for color data
-    if (p.read() == 'H') {
-      if (p == Zumo1) {
-        int data1_1 = p.read();
-        int data1_2 = p.read();
-        int data1_3 = p.read();
-        int data1_4 = p.read(); // Read color data
-        if (data1_1 < 10) mode1 = updateMode(data1_1);
-        if (data1_2 < 80) Dist1 = data1_2;
-        if (data1_3 < 10) direction1 = data1_3;
-        if (data1_4 >= 0 && data1_4 <= 3) color1 = data1_4; // Set color1 based on received value
-      } else if (p == Zumo2) {
-        int data2_1 = p.read();
-        int data2_2 = p.read();
-        int data2_3 = p.read();
-        int data2_4 = p.read(); // Read color data
-        if (data2_1 < 10) mode2 = updateMode(data2_1);
-        if (data2_2 < 80) Dist2 = data2_2;
-        if (data2_3 < 10) direction2 = data2_3;
-        if (data2_4 >= 0 && data2_4 <= 3) color2 = data2_4; // Set color2 based on received value
-      } else if (p == Zumo3) {
-        int data3_1 = p.read();
-        int data3_2 = p.read();
-        int data3_3 = p.read();
-        int data3_4 = p.read(); // Read color data
-        if (data3_1 < 10) mode3 = updateMode(data3_1);
-        if (data3_2 < 80) Dist3 = data3_2;
-        if (data3_3 < 10) direction3 = data3_3;
-        if (data3_4 >= 0 && data3_4 <= 3) color3 = data3_4; // Set color3 based on received value
+  for (int i = 0; i < zumos.length; i++) {
+    if (p == zumos[i] && p.available() >= 5) {
+      if (p.read() == 'H') {
+        int data1 = p.read();
+        int data2 = p.read();
+        int data3 = p.read();
+        int data4 = p.read(); // Read color data
+
+        if (data1 < 10) modes[i] = updateMode(data1);
+        if (data2 < 80) distances[i] = data2;
+        if (data3 < 10) directions[i] = data3;
+        if (data4 >= 0 && data4 <= 3) colors[i] = data4;
+
+        p.clear();
       }
-      p.clear();
     }
   }
 }
