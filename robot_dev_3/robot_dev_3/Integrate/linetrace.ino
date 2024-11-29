@@ -150,7 +150,7 @@ void movement_North()
       break;
       
    case 2:
-      motors.setSpeeds(160, -160);//150の速度で回転する
+      motors.setSpeeds(130, -130);//150の速度で回転する
       if(0 < dist && dist < 25){//物体との距離が15cm以内になったらモードを3にする
         /*checkDist=dist;
         checkStart = timeNow_G; 
@@ -162,31 +162,41 @@ void movement_North()
         mode_G = 1;//nマイクロ秒経ったらモードを2にする
     break;
    case 3:
-    if(dist >= 5){//物体との距離が5cm以内になるまで前進
+    if(dist > 5){//物体との距離が5cm以内になるまで前進
       motors.setSpeeds(150,150);
       straight_time = timeNow_G; 
-    }else if(timeNow_G - straight_time > 4000 && dist > 5){
-      mode_G = 1;
     }else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
       motors.setSpeeds(0, 0);
       mode_G =4;         
       delay(1000);
     }
+
+    if(timeNow_G - straight_time > 4000 && dist > 5){
+      mode_G = 1;
+    }
+
     break;
     case 4: 
-      diff = turnTo(30);
-      motorL_G = diff*0.8;
-      motorR_G = -diff*0.8;
-      motors.setSpeeds(motorL_G, motorR_G);
-      if(abs(0-heading_G)<= 5 && dist < 5){
-        mode_G = 5;
-      }else if(dist >=15){
+      if(dist >=10){
         mode_G = 1;
+      }else if(dist < 10){
+        diff = turnTo(10);
+        motorL_G = diff*0.8;
+        motorR_G = -diff*0.8;
+        motors.setSpeeds(motorL_G, motorR_G);
+        if(abs(10-heading_G)<= 10 && dist < 5){
+          mode_G = 5;
+        }else if(dist >=15){
+          mode_G = 1;
+        }
       }
     break;
     case 5:
       change_black = true;
-      motors.setSpeeds(110, 110);
+      motors.setSpeeds(130, 130);
+      if(dist > 15){
+        mode_G = 1;
+      }
       if(move_color == 2){
         mode_G = 1;
       }
@@ -243,43 +253,53 @@ void movement_South()
       break;
       
    case 2:
-      motors.setSpeeds(160, -160);//150の速度で回転する
-      if(0 < dist && dist < 25){//物体との距離が15cm以内になったらモードを3にする
+      motors.setSpeeds(140, -140);//150の速度で回転する
+      if(0 < dist && dist < 20){//物体との距離が15cm以内になったらモードを3にする
         /*checkDist=dist;
         checkStart = timeNow_G; 
         checkMovement();
         if(cm == true)*/
           mode_G = 3;
+          straight_time = timeNow_G; 
       }
       if(maintainState(2500))
         mode_G = 1;//nマイクロ秒経ったらモードを2にする
     break;
    case 3:
-    if(dist >= 5){//物体との距離が5cm以内になるまで前進
+    if(dist > 5){//物体との距離が5cm以内になるまで前進
       motors.setSpeeds(150,150);
-      straight_time = timeNow_G; 
-    }else if(timeNow_G - straight_time > 4000 && dist > 5){
-      mode_G = 1;
+      straight_time= timeNow_G;
     }else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
       motors.setSpeeds(0, 0);
       mode_G =4;         
       delay(1000);
     }
+
+    if(timeNow_G - straight_time > 4000 && dist > 5){
+      mode_G = 1;
+    }
     break;
     case 4: 
-      diff = turnTo(210);
-      motorL_G = diff*0.8;
-      motorR_G = -diff*0.8;
-      motors.setSpeeds(motorL_G, motorR_G);
-      if(abs(0-heading_G)<= 5 && dist < 5){
-        mode_G = 5;
-      }else if(dist >=15){
+      if(dist >=  10){
         mode_G = 1;
+      }else if(dist < 10){
+        diff = turnTo(180);
+        motorL_G = diff*0.8;
+        motorR_G = -diff*0.8;
+        motors.setSpeeds(motorL_G, motorR_G);
+        if(abs(180-heading_G)<= 10 && dist < 5){
+          mode_G = 5;
+        }else if(dist >=15){
+          mode_G = 1;
+        }
       }
     break;
     case 5:
       change_black = true;
-      motors.setSpeeds(110, 110);
+      motors.setSpeeds(130, 130);
+      if(dist > 15){
+        mode_G = 1;
+      }
       if(move_color == 2){
         mode_G = 6;
       }
