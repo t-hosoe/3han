@@ -27,26 +27,16 @@ void draw() {
 }
 
 void drawMeter(int x, int y, int distance, String label, String mode, int direction) {
-  // 距離メーター (円形)
-  fill(200);
-  ellipse(x, y, 150, 150);
-  float angle = map(distance, 0, 100, 0, TWO_PI);
-  stroke(255, 0, 0);
-  line(x, y, x + cos(-HALF_PI + angle) * 70, y + sin(-HALF_PI + angle) * 70);
-
-  // 距離のテキスト
-  fill(0);
-  text(distance + " cm", x, y + 100);
-
   // ラベルとモード
-  text(label, x, y - 120);
-  text("Mode: " + mode, x, y + 140);
+  fill(0);
+  text(label, x, y - 140);
+  text("Mode: " + mode, x, y - 100);
 
   // 矢印で方向表示
   drawArrow(x, y, direction);
 
   // 距離を横棒のメーターで表示
-  drawDistanceBar(x, y + 180, distance);
+  drawDistanceBar(x, y + 80, distance);
 }
 
 void drawArrow(int x, int y, int direction) {
