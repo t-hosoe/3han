@@ -18,16 +18,16 @@ void draw() {
 
   // Zumo1の表示
   drawMeter(200, 200, Dist1, "Zumo1", mode1, direction1);
-  
+
   // Zumo2の表示
   drawMeter(600, 200, Dist2, "Zumo2", mode2, direction2);
-  
+
   // Zumo3の表示
   drawMeter(1000, 200, Dist3, "Zumo3", mode3, direction3);
 }
 
 void drawMeter(int x, int y, int distance, String label, String mode, int direction) {
-  // 距離メーター
+  // 距離メーター (円形)
   fill(200);
   ellipse(x, y, 150, 150);
   float angle = map(distance, 0, 100, 0, TWO_PI);
@@ -44,6 +44,9 @@ void drawMeter(int x, int y, int distance, String label, String mode, int direct
 
   // 矢印で方向表示
   drawArrow(x, y, direction);
+
+  // 距離を横棒のメーターで表示
+  drawDistanceBar(x, y + 180, distance);
 }
 
 void drawArrow(int x, int y, int direction) {
@@ -63,6 +66,25 @@ void drawArrow(int x, int y, int direction) {
   triangle(endX, endY,
            endX + cos(arrowAngle1) * arrowSize, endY - sin(arrowAngle1) * arrowSize,
            endX + cos(arrowAngle2) * arrowSize, endY - sin(arrowAngle2) * arrowSize);
+}
+
+void drawDistanceBar(int x, int y, int distance) {
+  int barWidth = 200;
+  int barHeight = 20;
+  float fillWidth = map(distance, 0, 100, 0, barWidth);
+
+  // 背景バー
+  fill(200);
+  rect(x - barWidth / 2, y, barWidth, barHeight);
+
+  // 距離に応じたフィル
+  fill(0, 255, 0);
+  rect(x - barWidth / 2, y, fillWidth, barHeight);
+
+  // 枠線
+  noFill();
+  stroke(0);
+  rect(x - barWidth / 2, y, barWidth, barHeight);
 }
 
 void serialEvent(Serial p) {
