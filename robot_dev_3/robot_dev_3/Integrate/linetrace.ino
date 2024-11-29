@@ -77,7 +77,49 @@ void linetrace_P()
     }
 }*/
 
-void movement()
+void colorMove(int color){
+  switch(move_color){
+    case 0:
+      break;
+    case 1:
+      if(change_black == false){
+        color_b = false;
+        motors.setSpeeds(-100, -100);
+        delay(1000);
+        motors.setSpeeds(150, -150);
+        delay(1300);
+        color_b = true;
+        mp = true;
+      }
+      break;
+    case 2:
+      color_b = false;
+      motors.setSpeeds(100, 100);
+      delay(500);
+      motors.setSpeeds(-150, -150);
+      delay(1000);
+      motors.setSpeeds(150, -150);
+      delay(1200);
+      color_b = true;
+      mp = true;
+      break;
+    case 3:
+      color_b = false;
+      motors.setSpeeds(100, 100);
+      delay(500);
+      motors.setSpeeds(-150, -150);
+      delay(1000);
+      motors.setSpeeds(150, -150);
+      delay(1200);
+      color_b = true;
+      mp = true;
+      break;
+    case 4:
+      break;
+  }
+}
+
+void movement_North()
 {
   float diff;
   dist = distance(); 
@@ -150,7 +192,7 @@ void movement()
       }
 
       if(move_color == 3){
-        mode_G = 1;
+        mode_G = 6;
       }
 
       if(move_color == 1){
@@ -163,55 +205,104 @@ void movement()
     if(move_color == 2){
       mode_G = 1;
     }
+  } 
+  }
+
+  colorMove(move_color);
+  
+}
+
+void movement_South()
+{
+  float diff;
+  dist = distance(); 
+  move_color = identifyColor(red_G, green_G, blue_G);
+  static unsigned long startTime; // static変数，時間計測ははunsigned long
+  // この変数は1秒停止の開始時間を覚えておくために使用
+  if(color_b == true){
+    switch (mode_G) 
+  {
+    case 0:
+      startTime = timeNow_G;//start時間を保存
+      
+      mode_G = 1;//モードを1に変更する
+      break;  // break文を忘れない（忘れるとその下も実行される）
+
+    case 1:
+      change_black = false;
+      motors.setSpeeds(200, 200);//100の速度でロボットを動かす
+      if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
+      {
+        if(mp == false){
+          mode_G = 2;
+        }else if(mp == true){
+         mp = false;
+        }
+      }
+        
+      break;
+      
+   case 2:
+      motors.setSpeeds(160, -160);//150の速度で回転する
+      if(0 < dist && dist < 25){//物体との距離が15cm以内になったらモードを3にする
+        /*checkDist=dist;
+        checkStart = timeNow_G; 
+        checkMovement();
+        if(cm == true)*/
+          mode_G = 3;
+      }
+      if(maintainState(2500))
+        mode_G = 1;//nマイクロ秒経ったらモードを2にする
+    break;
+   case 3:
+    if(dist >= 5){//物体との距離が5cm以内になるまで前進
+      motors.setSpeeds(150,150);
+      straight_time = timeNow_G; 
+    }else if(timeNow_G - straight_time > 4000 && dist > 5){
+      mode_G = 1;
+    }else if(0 < dist && dist < 5){//物体との距離が5cm以下なら静止
+      motors.setSpeeds(0, 0);
+      mode_G =4;         
+      delay(1000);
+    }
+    break;
+    case 4: 
+      diff = turnTo(210);
+      motorL_G = diff*0.8;
+      motorR_G = -diff*0.8;
+      motors.setSpeeds(motorL_G, motorR_G);
+      if(abs(0-heading_G)<= 5 && dist < 5){
+        mode_G = 5;
+      }else if(dist >=15){
+        mode_G = 1;
+      }
+    break;
+    case 5:
+      change_black = true;
+      motors.setSpeeds(110, 110);
+      if(move_color == 2){
+        mode_G = 6;
+      }
+
+      if(move_color == 3){
+        mode_G = 1;
+      }
+
+      if(move_color == 1){
+        mode_G = 6;
+      }
+    break;
+    case 6:
+    linetrace_P();
+    motors.setSpeeds(motorL_G, motorR_G);
     if(move_color == 3){
       mode_G = 1;
     }
   } 
   }
 
-  switch(move_color){
-    case 0:
-      break;
-    case 1:
-      if(change_black == false){
-        color_b = false;
-        motors.setSpeeds(-100, -100);
-        delay(1000);
-        motors.setSpeeds(150, -150);
-        delay(1300);
-        color_b = true;
-        mp = true;
-      }
-      break;
-    case 2:
-      color_b = false;
-      motors.setSpeeds(100, 100);
-      delay(500);
-      motors.setSpeeds(-150, -150);
-      delay(1000);
-      motors.setSpeeds(150, -150);
-      delay(1200);
-      color_b = true;
-      mp = true;
-      break;
-    case 3:
-      color_b = false;
-      motors.setSpeeds(100, 100);
-      delay(500);
-      motors.setSpeeds(-150, -150);
-      delay(1000);
-      motors.setSpeeds(150, -150);
-      delay(1200);
-      color_b = true;
-      mp = true;
-      break;
-    case 4:
-      break;
-  }
-  
-  
+  colorMove(move_color);
 }
-
 void info_write(){
   Serial.print("timeNow:");
   Serial.print(timeNow_G);
