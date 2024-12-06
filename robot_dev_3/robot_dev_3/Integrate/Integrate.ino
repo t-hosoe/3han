@@ -135,6 +135,7 @@ void sendData()
   // if文の条件： 最初の通信である || 
   // 最後のデータ送信から500ms経過 || 
   // (データ送信要求が来ている && 最後のデータ送信から50ms経過)
+  /*
   if (flag_start == true || 
       timeNow_G - timePrev > 500 || 
       (Serial.available() > 0 && timeNow_G - timePrev > 50)) 
@@ -145,17 +146,16 @@ void sendData()
       // 送信要求が複数来ていた場合は全て読み込む
       inByte = Serial.read();
     }
-    
+    */
     Serial.write('H');
     Serial.write(mode_G);
     Serial.write(dist);
     Serial.write(Head);
-    Serial.write(move_color);
     
     //Serial.write((int)red_G);
     //Serial.write((int)green_G );
     //Serial.write((int)blue_G);
 
     timePrev = timeNow_G;
-  }
+  //}
 }
