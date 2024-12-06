@@ -11,8 +11,8 @@ int distance() {
 
   delay(60);                     //trigがHIGHになる間隔を60ms以上空ける（超音波センサの仕様）
 
-  if(dist >=120)
-    dist = 120;
+  if(dist >=150)
+    dist = 150;
 
   return dist;
 }
@@ -77,6 +77,14 @@ void linetrace_P()
     }
 }*/
 
+void moveVertical(){
+  motors.setSpeeds(150, -150);//時計回り
+  delay(650);
+
+  /*motors.setSpeeds(-150, 150);//反時計回り
+  delay(650);*/
+}
+
 void colorMove(int color){
   switch(move_color){
     case 0:
@@ -131,7 +139,7 @@ void movement_North()
   {
     case 0:
       startTime = timeNow_G;//start時間を保存
-      
+      //moveVertical();
       mode_G = 1;//モードを1に変更する
       break;  // break文を忘れない（忘れるとその下も実行される）
 
@@ -177,6 +185,9 @@ void movement_North()
 
     break;
     case 4: 
+      if(dist >=10){
+        mode_G = 1;
+      }else if(dist < 10){
         diff = turnTo(10);
         motorL_G = diff*0.8;
         motorR_G = -diff*0.8;
@@ -186,7 +197,7 @@ void movement_North()
         }else if(dist >=15){
           mode_G = 1;
         }
-      
+      }
     break;
     case 5:
       change_black = true;
@@ -231,7 +242,7 @@ void movement_South()
   {
     case 0:
       startTime = timeNow_G;//start時間を保存
-      
+      //moveVertical();
       mode_G = 1;//モードを1に変更する
       break;  // break文を忘れない（忘れるとその下も実行される）
 
@@ -277,7 +288,9 @@ void movement_South()
     }
     break;
     case 4: 
-      
+      if(dist >=  10){
+        mode_G = 1;
+      }else if(dist < 10){
         diff = turnTo(180);
         motorL_G = diff*0.8;
         motorR_G = -diff*0.8;
@@ -287,7 +300,7 @@ void movement_South()
         }else if(dist >=15){
           mode_G = 1;
         }
-      
+      }
     break;
     case 5:
       change_black = true;
