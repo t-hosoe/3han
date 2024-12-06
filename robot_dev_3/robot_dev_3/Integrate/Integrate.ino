@@ -23,10 +23,13 @@ float heading_p = 0;
 bool color_b;
 bool change_black;
 bool mp;
+bool cm;
 int move_color;
 int Head=0;
 int moveRobot;
 int checkDist;
+int checkStart= 0;
+int straight_time = 0;
 
 void setup()
 {
@@ -48,6 +51,7 @@ void setup()
   color_b = true;
   change_black = false;
   mp = false;
+  cm = true;
   move_color = 0;
 }
 
@@ -75,7 +79,8 @@ void loop()
   
   sendData(); // データ送信
 
-  movement();
+  movement_North();
+  //movement_South();
 
   info_write();
 }
@@ -145,6 +150,7 @@ void sendData()
     Serial.write(mode_G);
     Serial.write(dist);
     Serial.write(Head);
+    Serial.write(move_color);
     
     //Serial.write((int)red_G);
     //Serial.write((int)green_G );
