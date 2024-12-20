@@ -22,6 +22,7 @@ float  heading_G= 0;
 float heading_p = 0;
 bool color_b;
 bool change_black;
+bool colorMove_trig;
 bool mp;
 bool cm;
 int move_color;
@@ -30,7 +31,8 @@ int moveRobot;
 int checkDist;
 int checkStart= 0;
 int straight_time = 0;
-
+int color_time = 0;
+int color_diff = 0;
 void setup()
 {
   button.waitForButton(); //ユーザボタンが押されるまで待機
@@ -50,6 +52,7 @@ void setup()
   motorL_G = 0;
   color_b = true;
   change_black = false;
+  colorMove_trig = true;
   mp = false;
   cm = true;
   move_color = 0;
