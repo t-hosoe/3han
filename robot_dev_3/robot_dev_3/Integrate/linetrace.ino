@@ -86,39 +86,70 @@ void moveVertical(){
 }
 
 void colorMove(int color){
+  
   switch(move_color){
     case 0:
       break;
     case 1:
       if(change_black == false){
+        color_time = millis();
         color_b = false;
-        motors.setSpeeds(-100, -100);
-        delay(1000);
-        motors.setSpeeds(150, -150);
-        delay(1300);
+        
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(-100, -100);
+        }
+        
+        color_time = millis();
+        
+        while(millis() - color_time < 1300){
+          motors.setSpeeds(150, -150);
+        }
+        
         color_b = true;
         mp = true;
       }
       break;
     case 2:
       color_b = false;
-      motors.setSpeeds(100, 100);
-      delay(500);
-      motors.setSpeeds(-150, -150);
-      delay(1000);
-      motors.setSpeeds(150, -150);
-      delay(1200);
+        color_time = millis();
+      while(millis() - color_time < 500){
+          motors.setSpeeds(100, 100);
+        }
+
+        color_time = millis();
+  
+      while(millis() - color_time < 1000){
+          motors.setSpeeds(-150, -150);
+        }
+
+        color_time = millis();
+        
+      while(millis() - color_time < 1200){
+          motors.setSpeeds(150, -150);
+        }
+     
       color_b = true;
       mp = true;
       break;
     case 3:
       color_b = false;
-      motors.setSpeeds(100, 100);
-      delay(500);
-      motors.setSpeeds(-150, -150);
-      delay(1000);
-      motors.setSpeeds(150, -150);
-      delay(1200);
+        color_time = millis();
+      while(millis() - color_time < 500){
+          motors.setSpeeds(100, 100);
+        }
+
+        color_time = millis();
+  
+      while(millis() - color_time < 1000){
+          motors.setSpeeds(-150, -150);
+        }
+
+        color_time = millis();
+        
+      while(millis() - color_time < 1200){
+          motors.setSpeeds(150, -150);
+        }
+     
       color_b = true;
       mp = true;
       break;
@@ -355,6 +386,9 @@ void info_write(){
   Serial.print(",");
   Serial.print("Head:");//0 白　1　黒　2　青　3　赤　4　不明
   Serial.print(Head);//RGBのgreen(0~255)の値をシリアルモニタに出力
+  Serial.print(",");
+  Serial.print("color_time:");//0 白　1　黒　2　青　3　赤　4　不明
+  Serial.print(color_time);//RGBのgreen(0~255)の値をシリアルモニタに出力
   Serial.print(",");
   Serial.print("blue:");
   Serial.println(blue_G);//RGBのblue(0~255)の値をシリアルモニタに出力
