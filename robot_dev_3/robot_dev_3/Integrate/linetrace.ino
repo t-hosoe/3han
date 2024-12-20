@@ -86,8 +86,7 @@ void moveVertical(){
 }
 
 void colorMove(int color){
-  
-  switch(move_color){
+    switch(move_color){
     case 0:
       break;
     case 1:
@@ -111,6 +110,7 @@ void colorMove(int color){
       break;
     case 2:
       color_b = false;
+      if(colorMove_trig == true){
         color_time = millis();
       while(millis() - color_time < 500){
           motors.setSpeeds(100, 100);
@@ -127,12 +127,32 @@ void colorMove(int color){
       while(millis() - color_time < 1200){
           motors.setSpeeds(150, -150);
         }
-     
+      }else if(colorMove_trig == false){
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 750){
+          motors.setSpeeds(-300, 300);
+        }
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(100, 100);
+        }
+        
+      }
+      mode_G = 1;
       color_b = true;
       mp = true;
       break;
     case 3:
       color_b = false;
+      if(colorMove_trig == true){
         color_time = millis();
       while(millis() - color_time < 500){
           motors.setSpeeds(100, 100);
@@ -149,13 +169,33 @@ void colorMove(int color){
       while(millis() - color_time < 1200){
           motors.setSpeeds(150, -150);
         }
-     
+      }else if(colorMove_trig == false){
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 750){
+          motors.setSpeeds(-300, 300);
+        }
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(100, 100);
+        }
+        
+      }
+      mode_G = 1;
       color_b = true;
       mp = true;
       break;
     case 4:
       break;
   }
+  
 }
 
 void movement_North()
@@ -176,6 +216,7 @@ void movement_North()
 
     case 1:
       change_black = false;
+      colorMove_trig = true;
       motors.setSpeeds(200, 200);//100の速度でロボットを動かす
       if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
       {
@@ -249,6 +290,7 @@ void movement_North()
       }
     break;
     case 6:
+    colorMove_trig = false;
     linetrace_P();
     motors.setSpeeds(motorL_G, motorR_G);
     if(move_color == 2){
