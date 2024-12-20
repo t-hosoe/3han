@@ -86,6 +86,7 @@ void moveVertical(){
 }
 
 void colorMove(int color){
+  if(colorMove_trig == true){
     switch(move_color){
     case 0:
       break;
@@ -110,7 +111,6 @@ void colorMove(int color){
       break;
     case 2:
       color_b = false;
-      if(colorMove_trig == true){
         color_time = millis();
       while(millis() - color_time < 500){
           motors.setSpeeds(100, 100);
@@ -127,32 +127,12 @@ void colorMove(int color){
       while(millis() - color_time < 1200){
           motors.setSpeeds(150, -150);
         }
-      }else if(colorMove_trig == false){
-        color_time = millis();
-        while(millis() - color_time < 500){
-          motors.setSpeeds(0, 0);
-        }
-        color_time = millis();
-        while(millis() - color_time < 750){
-          motors.setSpeeds(-300, 300);
-        }
-        color_time = millis();
-        while(millis() - color_time < 500){
-          motors.setSpeeds(0, 0);
-        }
-        color_time = millis();
-        while(millis() - color_time < 1000){
-          motors.setSpeeds(100, 100);
-        }
-        
-      }
-      mode_G = 1;
+     
       color_b = true;
       mp = true;
       break;
     case 3:
       color_b = false;
-      if(colorMove_trig == true){
         color_time = millis();
       while(millis() - color_time < 500){
           motors.setSpeeds(100, 100);
@@ -169,33 +149,68 @@ void colorMove(int color){
       while(millis() - color_time < 1200){
           motors.setSpeeds(150, -150);
         }
-      }else if(colorMove_trig == false){
-        color_time = millis();
-        while(millis() - color_time < 500){
-          motors.setSpeeds(0, 0);
-        }
-        color_time = millis();
-        while(millis() - color_time < 750){
-          motors.setSpeeds(-300, 300);
-        }
-        color_time = millis();
-        while(millis() - color_time < 500){
-          motors.setSpeeds(0, 0);
-        }
-        color_time = millis();
-        while(millis() - color_time < 1000){
-          motors.setSpeeds(100, 100);
-        }
-        
-      }
-      mode_G = 1;
+     
       color_b = true;
       mp = true;
       break;
     case 4:
       break;
   }
-  
+  }
+  if(colorMove_trig == false){
+    switch(move_color){
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        /*color_time = millis();
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(100, 100);
+        }*/
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 750){
+          motors.setSpeeds(-300, 300);
+        }
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(100, 100);
+        }
+        colorMove_trig = true;
+        change_black = false;
+        break;
+      case 3:
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(-300, 300);
+        }
+        color_time = millis();
+        while(millis() - color_time < 500){
+          motors.setSpeeds(0, 0);
+        }
+        color_time = millis();
+        while(millis() - color_time < 1000){
+          motors.setSpeeds(100, 100);
+        }
+        colorMove_trig = true;
+        change_black = false;
+        break;
+      case 4:
+        break;
+    }
+  }
 }
 
 void movement_North()
@@ -216,7 +231,7 @@ void movement_North()
 
     case 1:
       change_black = false;
-      colorMove_trig = true;
+       colorMove_trig = true;
       motors.setSpeeds(200, 200);//100の速度でロボットを動かす
       if(maintainState(2000))//nマイクロ秒経ったらモードを2にする
       {
@@ -294,7 +309,9 @@ void movement_North()
     linetrace_P();
     motors.setSpeeds(motorL_G, motorR_G);
     if(move_color == 2){
+     
       mode_G = 1;
+      //colorMove_trig = true;
     }
   } 
   }
@@ -429,8 +446,8 @@ void info_write(){
   Serial.print("Head:");//0 白　1　黒　2　青　3　赤　4　不明
   Serial.print(Head);//RGBのgreen(0~255)の値をシリアルモニタに出力
   Serial.print(",");
-  Serial.print("color_time:");//0 白　1　黒　2　青　3　赤　4　不明
-  Serial.print(color_time);//RGBのgreen(0~255)の値をシリアルモニタに出力
+  Serial.print("colorMove_trig:");//0 白　1　黒　2　青　3　赤　4　不明
+  Serial.print(colorMove_trig);//RGBのgreen(0~255)の値をシリアルモニタに出力
   Serial.print(",");
   Serial.print("blue:");
   Serial.println(blue_G);//RGBのblue(0~255)の値をシリアルモニタに出力
