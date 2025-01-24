@@ -8,8 +8,8 @@ int color1 = 0, color2 = 0, color3 = 0; // New variables for color
 
 void setup() {
   size(1200, 800);
-  Zumo1 = new Serial(this, "COM6", 9600);
-  Zumo2 = new Serial(this, "COM7", 9600);
+  Zumo1 = new Serial(this, "/dev/ttyUSB0", 9600);
+  Zumo2 = new Serial(this, "/dev/ttyUSB1", 9600);
 //Zumo3 = new Serial(this, "/dev/ttyUSB2", 9600);
   background(255);
   textAlign(CENTER, CENTER);
